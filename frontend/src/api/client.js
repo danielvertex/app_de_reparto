@@ -56,4 +56,15 @@ export const optimizeRoute = () => request('/routes/optimize', { method: 'POST' 
 
 // ─── History ───
 export const getHistory = () => request('/history');
-export const exportTrip = (tripId, format = 'full') => request(`/history/${tripId}/export?format=${format}`);
+
+export const exportTrip = async (tripId, format = 'full') => {
+  const res = await fetch(`/api/history/${tripId}/export?format=${format}`);
+  if (!res.ok) throw new Error('Error al exportar el viaje');
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `viaje_${tripId}_${format}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+};

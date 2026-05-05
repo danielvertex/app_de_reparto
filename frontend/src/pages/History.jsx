@@ -20,7 +20,7 @@ export default function HistoryPage({ showToast }) {
     setExporting(tripId);
     try {
       await exportTrip(tripId, 'full');
-      showToast('Guardado en data/exports/', 'success');
+      showToast('CSV descargado correctamente', 'success');
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
