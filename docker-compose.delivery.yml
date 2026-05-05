@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  delivery-api:
+    build: .
+    container_name: delivery-api
+    restart: always
+    networks:
+      - traefik_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.delivery-api.rule=Host(`api.dominiocliente.com`)"
+      - "traefik.http.routers.delivery-api.entrypoints=websecure"
+      - "traefik.http.routers.delivery-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.delivery-api.loadbalancer.server.port=8000"
+    volumes:
+      - ./data:/app/data
+
+networks:
+  traefik_network:
+    external: true
