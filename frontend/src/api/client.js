@@ -2,7 +2,7 @@
  * API Client — fetch wrapper con manejo de errores y retry offline.
  */
 
-const API_BASE = '/api';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://reparto.bluegreenpl.com/api';
 
 async function request(path, options = {}) {
   const url = `${API_BASE}${path}`;
@@ -26,7 +26,7 @@ async function request(path, options = {}) {
   try {
     data = await res.json();
   } catch {
-    throw new Error(`El servidor respondió sin datos (HTTP ${res.status}). Verifica que el backend esté activo en http://localhost:8000`);
+    throw new Error(`El servidor respondió sin datos (HTTP ${res.status}). Verifica que el backend esté activo en https://reparto.bluegreenpl.com`);
   }
 
   if (!res.ok) {
@@ -58,7 +58,7 @@ export const optimizeRoute = () => request('/routes/optimize', { method: 'POST' 
 export const getHistory = () => request('/history');
 
 export const exportTrip = async (tripId, format = 'full') => {
-  const res = await fetch(`/api/history/${tripId}/export?format=${format}`);
+  const res = await fetch(`${API_BASE}/history/${tripId}/export?format=${format}`);
   if (!res.ok) throw new Error('Error al exportar el viaje');
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
