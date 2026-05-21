@@ -34,12 +34,12 @@ export default defineConfig({
             options: { cacheName: 'google-fonts-cache', expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 } },
           },
           {
-            urlPattern: /\/api\/trip$/,
+            urlPattern: /^https:\/\/reparto\.bluegreenpl\.com\/api\/trip$/,
             handler: 'NetworkFirst',
             options: { cacheName: 'trip-data', expiration: { maxEntries: 1, maxAgeSeconds: 60 * 60 } },
           },
           {
-            urlPattern: /\/api\/history$/,
+            urlPattern: /^https:\/\/reparto\.bluegreenpl\.com\/api\/history$/,
             handler: 'StaleWhileRevalidate',
             options: { cacheName: 'history-data', expiration: { maxEntries: 50, maxAgeSeconds: 60 * 60 * 24 } },
           },
