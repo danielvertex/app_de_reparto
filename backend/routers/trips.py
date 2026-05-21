@@ -2,18 +2,20 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from delivery_app.ui.state_mapper import map_trip_to_state
 
 from backend.dependencies import trip_service
 from backend.schemas import APIResponse
+from backend.auth.dependencies import get_current_user, require_role
+from backend.auth.models import User
 
 router = APIRouter(prefix="/api/trip", tags=["trip"])
 
 
 @router.get("")
-def get_active_trip() -> APIResponse:
+def get_active_trip(_user: User = Depends(get_current_user)) -> APIResponse:
     """Retorna el estado completo del viaje activo."""
     trip = trip_service.load_active_trip()
     past_trips = trip_service.list_archived_trips()
@@ -26,7 +28,7 @@ def get_active_trip() -> APIResponse:
 
 
 @router.post("/close")
-def close_day() -> APIResponse:
+def close_day(_user: User = Depends(require_role("owner"))) -> APIResponse:
     """Cierra la jornada activa y archiva los datos."""
     trip = trip_service.load_active_trip()
     if not trip:

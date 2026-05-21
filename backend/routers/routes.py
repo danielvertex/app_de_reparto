@@ -2,18 +2,20 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 
 from delivery_app.domain.trip_manager import get_pending_deliveries
 
 from backend.dependencies import trip_service, routing_service
 from backend.schemas import APIResponse
+from backend.auth.dependencies import get_current_user
+from backend.auth.models import User
 
 router = APIRouter(prefix="/api/routes", tags=["routes"])
 
 
 @router.post("/optimize")
-async def optimize_route() -> APIResponse:
+async def optimize_route(_user: User = Depends(get_current_user)) -> APIResponse:
     """Calcula la ruta óptima para las entregas pendientes."""
     trip = trip_service.load_active_trip()
     if not trip:

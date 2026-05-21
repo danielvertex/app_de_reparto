@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY backend/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install "fastmcp[apps]" prefab-ui httpx
+RUN pip install "fastmcp[apps]" prefab-ui httpx "python-jose[cryptography]" "passlib[bcrypt]"
 
 COPY . .
 

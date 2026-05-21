@@ -1,0 +1,22 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    devDependencies:
+      '@polyskill/nextlevelbuilder.ui-ux-pro-max-skill':
+        specifier: ^1.0.0
+        version: 1.0.0
+
+packages:
+
+  '@polyskill/nextlevelbuilder.ui-ux-pro-max-skill@1.0.0':
+    resolution: {integrity: sha512-03yGro/S+Ofb9iBIsC5f/ndreifmSxTPdEz6b5smVL9pS8aYGKwiPV2sXDBK9XDS+a9VqQ4JcQTuD3XL82mjHQ==}
+
+snapshots:
+
+  '@polyskill/nextlevelbuilder.ui-ux-pro-max-skill@1.0.0': {}

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 
@@ -12,6 +12,8 @@ from delivery_app.ui.state_mapper import map_trip_to_state
 
 from backend.dependencies import trip_service
 from backend.schemas import APIResponse
+from backend.auth.dependencies import get_current_user
+from backend.auth.models import User
 
 router = APIRouter(prefix="/api/config", tags=["config"])
 
@@ -35,7 +37,7 @@ class FuelRequest(BaseModel):
 
 
 @router.put("/origin")
-def update_origin(body: OriginRequest) -> APIResponse:
+def update_origin(body: OriginRequest, _user: User = Depends(get_current_user)) -> APIResponse:
     """Configura el punto de partida y crea la jornada si no existe."""
     try:
         lat = float(str(body.latitude).replace(",", ".").strip())
@@ -66,7 +68,7 @@ def update_origin(body: OriginRequest) -> APIResponse:
 
 
 @router.put("/return")
-def update_return_config(body: ReturnRequest) -> APIResponse:
+def update_return_config(body: ReturnRequest, _user: User = Depends(get_current_user)) -> APIResponse:
     """Configura el comportamiento de retorno al finalizar."""
     trip = trip_service.load_active_trip()
     if not trip:
@@ -102,7 +104,7 @@ def update_return_config(body: ReturnRequest) -> APIResponse:
 
 
 @router.put("/fuel")
-def update_fuel_config(body: FuelRequest) -> APIResponse:
+def update_fuel_config(body: FuelRequest, _user: User = Depends(get_current_user)) -> APIResponse:
     """Configura los parámetros de combustible."""
     trip = trip_service.load_active_trip()
     if not trip:

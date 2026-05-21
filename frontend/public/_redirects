@@ -1,1 +1,3 @@
-/api/* https://reparto.bluegreenpl.com/api/:splat 200
+/api/* https://api.repartoapp.bluegreenpl.com/api/:splat 200
+/* /index.html 200
+

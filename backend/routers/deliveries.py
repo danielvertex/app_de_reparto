@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 
 from delivery_app.domain.enums import DeliveryStatus
@@ -12,6 +12,8 @@ from delivery_app.ui.state_mapper import map_trip_to_state
 
 from backend.dependencies import trip_service
 from backend.schemas import APIResponse
+from backend.auth.dependencies import get_current_user
+from backend.auth.models import User
 
 router = APIRouter(prefix="/api/deliveries", tags=["deliveries"])
 
@@ -29,7 +31,7 @@ class StatusUpdateRequest(BaseModel):
 
 
 @router.get("")
-def list_deliveries() -> APIResponse:
+def list_deliveries(_user: User = Depends(get_current_user)) -> APIResponse:
     """Lista las entregas de la jornada activa."""
     trip = trip_service.load_active_trip()
     if not trip:
@@ -48,7 +50,7 @@ def list_deliveries() -> APIResponse:
 
 
 @router.post("")
-def add_delivery_point(body: AddPointRequest) -> APIResponse:
+def add_delivery_point(body: AddPointRequest, _user: User = Depends(get_current_user)) -> APIResponse:
     """Agrega un nuevo punto de entrega a la ruta."""
     try:
         lat = float(str(body.latitude).replace(",", "."))
@@ -88,7 +90,7 @@ def add_delivery_point(body: AddPointRequest) -> APIResponse:
 
 
 @router.delete("/{delivery_id}")
-def remove_delivery_point(delivery_id: str) -> APIResponse:
+def remove_delivery_point(delivery_id: str, _user: User = Depends(get_current_user)) -> APIResponse:
     """Elimina un punto de entrega por su ID."""
     trip = trip_service.load_active_trip()
     if not trip:
@@ -113,7 +115,7 @@ def remove_delivery_point(delivery_id: str) -> APIResponse:
 
 
 @router.patch("/{delivery_id}/status")
-def mark_delivery_status(delivery_id: str, body: StatusUpdateRequest) -> APIResponse:
+def mark_delivery_status(delivery_id: str, body: StatusUpdateRequest, _user: User = Depends(get_current_user)) -> APIResponse:
     """Cambia el estado de una entrega."""
     trip = trip_service.load_active_trip()
     if not trip:

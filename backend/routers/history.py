@@ -7,7 +7,7 @@ import io
 import json
 from pathlib import Path
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import StreamingResponse
 
 from delivery_app.domain.trip_manager import get_summary
@@ -15,19 +15,21 @@ from delivery_app.utils.time_utils import now_mx
 
 from backend.dependencies import trip_service
 from backend.schemas import APIResponse
+from backend.auth.dependencies import get_current_user
+from backend.auth.models import User
 
 router = APIRouter(prefix="/api/history", tags=["history"])
 
 
 @router.get("")
-def list_history() -> APIResponse:
+def list_history(_user: User = Depends(get_current_user)) -> APIResponse:
     """Lista los viajes archivados."""
     past_trips = trip_service.list_archived_trips()
     return APIResponse(message="OK", data={"past_trips": past_trips})
 
 
 @router.get("/{trip_id}/export")
-def export_route(trip_id: str, format: str = "full"):
+def export_route(trip_id: str, format: str = "full", _user: User = Depends(get_current_user)):
     """Exporta los datos de una jornada archivada como CSV."""
     valid_formats = {"full", "summary", "route", "deliveries"}
     if format not in valid_formats:

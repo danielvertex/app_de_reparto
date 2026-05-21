@@ -1,25 +1,27 @@
 services:
-  delivery-api:
+  delivery-api-new:
     build: .
-    container_name: delivery-api
+    container_name: delivery-api-new
     restart: always
     networks:
       - root_default
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.delivery-api.rule=Host(`reparto.bluegreenpl.com`)"
-      - "traefik.http.routers.delivery-api.tls=true"
-      - "traefik.http.routers.delivery-api.entrypoints=websecure"
-      - "traefik.http.routers.delivery-api.tls.certresolver=mytlschallenge"
-      - "traefik.http.services.delivery-api.loadbalancer.server.port=8000"
-      # Middleware CORS
-      - "traefik.http.middlewares.delivery-cors.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS,PATCH"
-      - "traefik.http.middlewares.delivery-cors.headers.accesscontrolalloworiginlistregex=https://.*\\.pages\\.dev,https://reparto\\.bluegreenpl\\.com"
-      - "traefik.http.middlewares.delivery-cors.headers.accesscontrolallowheaders=*"
-      - "traefik.http.middlewares.delivery-cors.headers.accesscontrolallowcredentials=true"
-      - "traefik.http.middlewares.delivery-cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.delivery-cors.headers.addvaryheader=true"
-      - "traefik.http.routers.delivery-api.middlewares=delivery-cors"
+      - "traefik.http.routers.delivery-api-new.rule=Host(`api.repartoapp.bluegreenpl.com`)"
+      - "traefik.http.routers.delivery-api-new.tls=true"
+      - "traefik.http.routers.delivery-api-new.entrypoints=websecure"
+      - "traefik.http.routers.delivery-api-new.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.delivery-api-new.loadbalancer.server.port=8000"
+      # Middleware CORS exclusivo para la nueva versión
+      - "traefik.http.middlewares.delivery-new-cors.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS,PATCH"
+      - "traefik.http.middlewares.delivery-new-cors.headers.accesscontrolalloworiginlistregex=https://.*\\.pages\\.dev,https://repartoapp\\.bluegreenpl\\.com"
+      - "traefik.http.middlewares.delivery-new-cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.delivery-new-cors.headers.accesscontrolallowcredentials=true"
+      - "traefik.http.middlewares.delivery-new-cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.delivery-new-cors.headers.addvaryheader=true"
+      - "traefik.http.routers.delivery-api-new.middlewares=delivery-new-cors"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-change-me-to-a-random-string-min-32-chars}
     volumes:
       - ./data:/app/data
 
