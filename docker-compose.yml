@@ -1,0 +1,30 @@
+services:
+  reparto-app-api:
+    build: .
+    container_name: reparto-app-api
+    restart: always
+    networks:
+      - root_default
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.reparto-app-api.rule=Host(`api.repartoapp.bluegreenpl.com`)"
+      - "traefik.http.routers.reparto-app-api.tls=true"
+      - "traefik.http.routers.reparto-app-api.entrypoints=websecure"
+      - "traefik.http.routers.reparto-app-api.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.reparto-app-api.loadbalancer.server.port=8000"
+      # Middleware CORS exclusivo para la nueva versión
+      - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS,PATCH"
+      - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolalloworiginlistregex=https://.*\\.pages\\.dev,https://repartoapp\\.bluegreenpl\\.com,https://reparto\\.bluegreenpl\\.com"
+      - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolallowcredentials=true"
+      - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.reparto-app-cors.headers.addvaryheader=true"
+      - "traefik.http.routers.reparto-app-api.middlewares=reparto-app-cors"
+    environment:
+      - SECRET_KEY=${SECRET_KEY:-change-me-to-a-random-string-min-32-chars}
+    volumes:
+      - ./data:/app/data
+
+networks:
+  root_default:
+    external: true

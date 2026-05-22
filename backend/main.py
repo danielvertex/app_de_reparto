@@ -59,6 +59,7 @@ app.add_middleware(
         "https://reparto.bluegreenpl.com",
         "https://repartoapp.bluegreenpl.com", # Nueva versión
         "https://reparto-pwa-5ia.pages.dev", # Producción
+        "https://repartoapp-673.pages.dev",    # Cloudflare Pages (nuevo)
     ],
     allow_credentials=True,
     allow_methods=["*"],
