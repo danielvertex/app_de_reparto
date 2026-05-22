@@ -51,16 +51,23 @@ app = FastAPI(
 # CORS — permitir acceso desde el frontend Vite (dev) y producción
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",   # Vite dev server
-        "http://localhost:4173",   # Vite preview
-        "http://127.0.0.1:5173",
-        "http://127.0.0.1:4173",
-        "https://reparto.bluegreenpl.com",
-        "https://repartoapp.bluegreenpl.com", # Nueva versión
-        "https://reparto-pwa-5ia.pages.dev", # Producción
-        "https://repartoapp-673.pages.dev",    # Cloudflare Pages (nuevo)
-    ],
+    # allow_origins=[
+    #     "http://localhost:5173",   # Vite dev server
+    #     "http://localhost:4173",   # Vite preview
+    #     "http://127.0.0.1:5173",
+    #     "http://127.0.0.1:4173",
+    #     "https://reparto.bluegreenpl.com",
+    #     "https://repartoapp.bluegreenpl.com", # Nueva versión
+    #     "https://reparto-pwa-5ia.pages.dev", # Producción
+    #     "https://repartoapp-673.pages.dev",    # Cloudflare Pages (nuevo)
+    # ],
+    allow_origin_regex=(
+        r"https://.*\.pages\.dev"
+        r"|https://repartoapp\.bluegreenpl\.com"
+        r"|https://reparto\.bluegreenpl\.com"
+        r"|http://localhost:\d+"
+        r"|http://127\.0\.0\.1:\d+"
+    ),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
