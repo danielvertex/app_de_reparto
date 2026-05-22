@@ -15,7 +15,7 @@ services:
       # Middleware CORS exclusivo para la nueva versión
       - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolallowmethods=GET,POST,PUT,DELETE,OPTIONS,PATCH"
       - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolalloworiginlistregex=https://.*\\.pages\\.dev,https://repartoapp\\.bluegreenpl\\.com,https://reparto\\.bluegreenpl\\.com"
-      - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolallowheaders=*"
+      - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolallowheaders=Content-Type, Authorization, Accept, Origin, X-Requested-With, Cache-Control, Cookie"
       - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolallowcredentials=true"
       - "traefik.http.middlewares.reparto-app-cors.headers.accesscontrolmaxage=100"
       - "traefik.http.middlewares.reparto-app-cors.headers.addvaryheader=true"
