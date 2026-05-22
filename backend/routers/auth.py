@@ -20,7 +20,7 @@ _IS_PRODUCTION = os.environ.get("SECRET_KEY", "") != ""
 
 
 @router.post("/login")
-def login(body: LoginRequest, response: Response) -> APIResponse:
+def login(body: LoginRequest, response: Response, request: Request) -> APIResponse:
     """Inicia sesión y setea cookie JWT."""
     user = repository.find_by_username(body.username)
     if not user or not user.is_active:
@@ -37,12 +37,19 @@ def login(body: LoginRequest, response: Response) -> APIResponse:
         }
     )
 
+    # Determinar si el host es local para evitar forzar Secure/SameSite=None sin HTTPS
+    host = request.headers.get("host", "").lower()
+    is_local = "localhost" in host or "127.0.0.1" in host
+    
+    secure_cookie = _IS_PRODUCTION and not is_local
+    samesite_cookie = "none" if secure_cookie else "lax"
+
     response.set_cookie(
         key="token",
         value=token,
         httponly=True,
-        secure=_IS_PRODUCTION,
-        samesite="lax",
+        secure=secure_cookie,
+        samesite=samesite_cookie,
         path="/api",
         max_age=60 * 60 * 8,  # 8 horas
     )
@@ -61,13 +68,19 @@ def login(body: LoginRequest, response: Response) -> APIResponse:
 
 
 @router.post("/logout")
-def logout(response: Response, _user: User = Depends(get_current_user)) -> APIResponse:
+def logout(response: Response, request: Request, _user: User = Depends(get_current_user)) -> APIResponse:
     """Cierra sesión eliminando la cookie."""
+    host = request.headers.get("host", "").lower()
+    is_local = "localhost" in host or "127.0.0.1" in host
+    
+    secure_cookie = _IS_PRODUCTION and not is_local
+    samesite_cookie = "none" if secure_cookie else "lax"
+
     response.delete_cookie(
         key="token",
         httponly=True,
-        secure=_IS_PRODUCTION,
-        samesite="lax",
+        secure=secure_cookie,
+        samesite=samesite_cookie,
         path="/api",
     )
     return APIResponse(message="Sesión cerrada.")
