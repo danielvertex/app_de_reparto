@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Datos locales (no versionar estado de la app)
+data/
+*.json.corrupt.bak
+*.json.v1.bak
+
+# Archivos de debugging / scratch
+dump.json
+output.json
+scratch.py
+
+# Variables de entorno
+.env
+.env.*
+*.local
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
